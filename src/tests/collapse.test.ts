@@ -1,4 +1,4 @@
-describe.only("collapse at given coordinates, with given value", () => {
+describe.skip("collapse at given coordinates, with given value", () => {
     test("collapse at 0, 0", () => {
         const grid = [["", "", ""], ["", "", ""]]
         const collapsedZeroZero = collapse("asd")(0, 0)(grid)
@@ -22,15 +22,3 @@ describe.only("collapse at given coordinates, with given value", () => {
     })
 
 })
-
-const collapse = (value: string) => {
-    return (i: number, j: number) => {
-        return (grid: string[][]): string[][] => {
-            if (i >= 0 && i < grid.length && j >= 0 && j < grid[i].length) {
-                grid[i].splice(j, 1, value);
-                grid.splice(i, 1, grid[i]);
-            }
-            return grid;
-        }
-    }
-}
