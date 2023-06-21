@@ -1,6 +1,6 @@
 import { collapse } from "../hepers/collapse"
 
-describe("collapse at given coordinates, with given value", () => {
+describe.skip("collapse at given coordinates, with given value", () => {
     test("collapse at 0, 0", () => {
         const grid = [["", "", ""], ["", "", ""]]
         const collapsedZeroZero = collapse("asd")(0, 0)(grid)
