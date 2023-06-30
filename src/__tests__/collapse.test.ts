@@ -1,4 +1,4 @@
-import { collapse } from "../hepers/collapse"
+import { collapse } from "../helpers/collapse"
 
 describe.skip("collapse at given coordinates, with given value", () => {
     test("collapse at 0, 0", () => {
