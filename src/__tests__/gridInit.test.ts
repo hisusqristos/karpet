@@ -1,4 +1,4 @@
-import { gridInit } from "../hepers/gridInit"
+import { gridInit } from "../helpers/gridInit"
 
 describe.only("initialize an empty grid", () => {
     test("width 2 height 3", () => {

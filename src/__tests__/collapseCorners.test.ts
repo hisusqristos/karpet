@@ -1,4 +1,4 @@
-import { collapseCorners } from "../hepers/collapse";
+import { collapseCorners } from "../helpers/collapse";
 
 describe.skip("place corner tiles in corners", () => {
     test("2x2 grid", () => {
