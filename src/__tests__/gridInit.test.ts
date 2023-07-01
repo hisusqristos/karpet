@@ -5,8 +5,13 @@ describe.only("initialize an empty grid", () => {
         const grid = [["", ""], ["", ""], ["", ""]]
         expect(grid).toEqual(gridInit(2, 3))
     })
-    test("if width or height smaller than 2 return 2x2 grid", () => {
-        const grid = [["", ""], ["", ""]];
-        expect(grid).toEqual(gridInit(1, 0));
+    test("width 3 height 1", () => {
+        const grid = [["", "", ""]];
+        expect(grid).toEqual(gridInit(3, 1));
     })
+    test("width 1 height 2", () => {
+        const grid = [[""], [""]];
+        expect(grid).toEqual(gridInit(1, 2));
+    })
+
 })
