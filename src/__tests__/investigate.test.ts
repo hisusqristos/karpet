@@ -1,7 +1,7 @@
 import { gridInit } from "../helpers/gridInit"
 import { pipe } from "../helpers/pipe"
-import { collapse, collapseCorners } from "../helpers/collapse"
-import { rules } from "../RULES"
+import { collapse } from "../helpers/collapse"
+import { allTiles, rules } from "../RULES"
 
 describe("investigate surrounding cells and return an array of possible tiles for the current cell", () => {
     test("if betwen LEFT-EDGE and RIGHT-EDGE then INTERNAL", () => {
@@ -30,7 +30,8 @@ describe("investigate surrounding cells and return an array of possible tiles fo
 const investigate = (rules: object) => {
     return (x: number, y: number) => {
         return (grid: string[][]): string[] => {
-            return ["internal"]
+            const possibleTiles = allTiles
+            return possibleTiles
         }
     }
 }

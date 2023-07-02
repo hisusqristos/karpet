@@ -1,3 +1,5 @@
+const allTiles: string[] = ["topEdge", "bottomEdge", "leftEdge", "rightEdge", "internal"]
+
 const rules = {
     topLeftCorner: { up: [""], right: ["topEdge", "topRightCorner"], bottom: ["leftEdge", "bottomLeftCorner"], left: [""] },
     topRighttCorner: { up: [""], right: [""], bottom: ["rightEdge", "bottomRightCorner"], left: ["topEdge", "topLeftCorner"] },
@@ -10,4 +12,4 @@ const rules = {
     internal: { up: ["topEdge", "internal"], right: ["rightEdge", "internal"], bottom: ["bottomEdge", "internal"], left: ["leftEdge", "internal"] }
 }
 
-export { rules }
+export { rules, allTiles }
