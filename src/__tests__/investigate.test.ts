@@ -27,10 +27,16 @@ describe("investigate surrounding cells and return an array of possible tiles fo
     })
 })
 
+type Sides = "up" | "right" | "bottom" | "left"
+type SurroundingTiles = Record<Sides, string>
+
 const investigate = (rules: object) => {
-    return (x: number, y: number) => {
+    return (y: number, x: number) => {
         return (grid: string[][]): string[] => {
             const possibleTiles = allTiles
+            // risky lines with mutations, to be refactored
+            const surroundingTiles: SurroundingTiles = { up: grid[y - 1][x], right: grid[y][x + 1], bottom: grid[y + 1][x], left: grid[y][x - 1] };
+            console.log(surroundingTiles);
             return possibleTiles
         }
     }
