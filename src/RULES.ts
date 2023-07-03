@@ -1,6 +1,10 @@
-const allTiles: string[] = ["topEdge", "bottomEdge", "leftEdge", "rightEdge", "internal"]
+const allTiles: string[] = ["topLeftCorner", "topRighttCorner", "bottomRightCorner", "bottomLeftCorner", "topEdge", "bottomEdge", "leftEdge", "rightEdge", "internal"]
 
-const rules = {
+type Tile = "topLeftCorner" | "topRighttCorner" | "bottomRightCorner" | "bottomLeftCorner" | "topEdge" | "bottomEdge" | "leftEdge" | "rightEdge" | "internal";
+type Sides = "up" | "right" | "bottom" | "left"
+type Rules = Record<Tile, Record<Sides, string[]>>
+
+const rules: Rules = {
     topLeftCorner: { up: [""], right: ["topEdge", "topRightCorner"], bottom: ["leftEdge", "bottomLeftCorner"], left: [""] },
     topRighttCorner: { up: [""], right: [""], bottom: ["rightEdge", "bottomRightCorner"], left: ["topEdge", "topLeftCorner"] },
     bottomRightCorner: { up: ["rightEdge", "topRightCorner"], right: [""], bottom: [""], left: ["bottomEdge", "bottomLeftCorner"] },
@@ -13,3 +17,4 @@ const rules = {
 }
 
 export { rules, allTiles }
+export type { Sides, Tile, Rules }

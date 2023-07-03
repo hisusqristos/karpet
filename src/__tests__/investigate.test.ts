@@ -1,7 +1,7 @@
 import { gridInit } from "../helpers/gridInit"
 import { pipe } from "../helpers/pipe"
 import { collapse } from "../helpers/collapse"
-import { allTiles, rules } from "../RULES"
+import { allTiles, rules, Sides, Rules } from "../RULES"
 
 describe("investigate surrounding cells and return an array of possible tiles for the current cell", () => {
     test("if betwen LEFT-EDGE and RIGHT-EDGE then INTERNAL", () => {
@@ -27,15 +27,19 @@ describe("investigate surrounding cells and return an array of possible tiles fo
     })
 })
 
-type Sides = "up" | "right" | "bottom" | "left"
 type SurroundingTiles = Record<Sides, string>
 
-const investigate = (rules: object) => {
+const investigate = (rules: Rules) => { // sorry for these ugly types, will try to write better looking solutions
     return (y: number, x: number) => {
         return (grid: string[][]): string[] => {
             const possibleTiles = allTiles
             // risky lines with mutations, to be refactored
             const surroundingTiles: SurroundingTiles = { up: grid[y - 1][x], right: grid[y][x + 1], bottom: grid[y + 1][x], left: grid[y][x - 1] };
+
+            for (const side in surroundingTiles) {
+                // chem karum mtacem
+            }
+
             console.log(surroundingTiles);
             return possibleTiles
         }
