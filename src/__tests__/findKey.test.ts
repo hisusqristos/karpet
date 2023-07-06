@@ -1,3 +1,5 @@
+import { findKey } from "../helpers/findKey"
+
 describe("return key from value", () => {
     test("string value", () => {
         const obj = {
@@ -25,10 +27,3 @@ describe("return key from value", () => {
         expect(findKey(obj, ["mayr", "im", "anush", "u", "angin"])).toEqual("hishum_em_demqy_qo_cer")
     })
 })
-
-function findKey(obj: Record<string, unknown>, value: unknown): string { // sorry for the string
-    const keysWithGivenValue = Object.keys(obj).filter(k => JSON.stringify(obj[k]) === JSON.stringify(value))
-
-    const neededKey: string = keysWithGivenValue.length != 0 ? keysWithGivenValue[0] : "nothing"
-    return neededKey
-}
