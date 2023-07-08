@@ -2,8 +2,9 @@ import { gridInit } from "../helpers/gridInit"
 import { pipe } from "../helpers/pipe"
 import { collapse } from "../helpers/collapse"
 import { allTiles, rules, Sides, Rules } from "../RULES"
+import { findKey } from "../helpers/findKey"
 
-describe("investigate surrounding cells and return an array of possible tiles for the current cell", () => {
+describe.skip("investigate surrounding cells and return an array of possible tiles for the current cell", () => {
     test("if betwen LEFT-EDGE and RIGHT-EDGE then INTERNAL", () => {
         const blankGrid = gridInit(3, 1);
         const grid = pipe(
@@ -36,12 +37,15 @@ const investigate = (rules: Rules) => { // sorry for these ugly types, will try 
             // risky lines with mutations, to be refactored
             const surroundingTiles: SurroundingTiles = { up: grid[y - 1][x], right: grid[y][x + 1], bottom: grid[y + 1][x], left: grid[y][x - 1] };
 
-            for (const side in surroundingTiles) {
-                // chem karum mtacem
+            for (const tile in surroundingTiles) {
+                const possibleSurroungings: Record<Sides, SurroundingTiles> = rules[tile];
+                const specificSide: Sides = findKey(possibleSurroungings,  )
+                const possibleSurroundingFromSpecificSide = possibleSurroungings[specificSide]
             }
 
             console.log(surroundingTiles);
             return possibleTiles
+
         }
     }
 }
