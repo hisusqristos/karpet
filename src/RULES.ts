@@ -2,7 +2,7 @@ const allTiles: string[] = ["topLeftCorner", "topRighttCorner", "bottomRightCorn
 
 type Tile = "topLeftCorner" | "topRighttCorner" | "bottomRightCorner" | "bottomLeftCorner" | "topEdge" | "bottomEdge" | "leftEdge" | "rightEdge" | "internal";
 type Sides = "up" | "right" | "bottom" | "left"
-type Rules = Record<Tile, Record<Sides, string[]>>
+type Rules = Record<string, Record<Sides, string[]>>
 
 const rules: Rules = {
     topLeftCorner: { up: [""], right: ["topEdge", "topRightCorner"], bottom: ["leftEdge", "bottomLeftCorner"], left: [""] },
@@ -13,7 +13,8 @@ const rules: Rules = {
     bottomEdge: { up: ["internal", "topEdge"], right: ["bottomRightCorner", "bottomEdge"], bottom: [""], left: ["bottomEdge", "bottomLeftCorner"] },
     leftEdge: { up: ["leftEdge", "topLeftEdge"], right: ["rightEdge", "internal"], bottom: ["leftEdge", "bottomLeftEdge"], left: [""] },
     rightEdge: { up: ["rightEdge", "topRightCorner"], right: [""], bottom: ["rightEdge", "bottomRightCorner"], left: ["leftEdge", "internal"] },
-    internal: { up: ["topEdge", "internal"], right: ["rightEdge", "internal"], bottom: ["bottomEdge", "internal"], left: ["leftEdge", "internal"] }
+    internal: { up: ["topEdge", "internal"], right: ["rightEdge", "internal"], bottom: ["bottomEdge", "internal"], left: ["leftEdge", "internal"] },
+    nothing: { up: [], right: [], bottom: [], left: [] }
 }
 
 export { rules, allTiles }
