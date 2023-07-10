@@ -1,7 +1,7 @@
 import { gridInit } from "../helpers/gridInit"
 import { pipe } from "../helpers/pipe"
 import { collapse } from "../helpers/collapse"
-import { allTiles, rules, Sides, Rules } from "../RULES"
+import { allTiles, rules, Side, Rules, Tile } from "../RULES"
 import { findKey } from "../helpers/findKey"
 
 describe.skip("investigate surrounding cells and return an array of possible tiles for the current cell", () => {
@@ -28,19 +28,19 @@ describe.skip("investigate surrounding cells and return an array of possible til
     })
 })
 
-type SurroundingTiles = Record<Sides, string>
 
 const investigate = (rules: Rules) => { // sorry for these ugly types, will try to write better looking solutions
     return (y: number, x: number) => {
-        return (grid: string[][]): string[] => {
+        return (grid: Tile[][]): string[] => {
             const possibleTiles = allTiles
             // risky lines with mutations, to be refactored
-            const surroundingTiles: SurroundingTiles = { up: grid[y - 1][x], right: grid[y][x + 1], bottom: grid[y + 1][x], left: grid[y][x - 1] };
+            const surroundingTiles: Record<Side, Tile> = { up: grid[y - 1][x], right: grid[y][x + 1], bottom: grid[y + 1][x], left: grid[y][x - 1] };
 
             for (const tile in surroundingTiles) {
-                const possibleSurroungings: Record<Sides, SurroundingTiles> = rules[tile];
-                const specificSide: Sides = findKey(possibleSurroungings,  )
-                const possibleSurroundingFromSpecificSide = possibleSurroungings[specificSide]
+                const possibleSurroungings: Record<Side, Tile[]> = rules[tile];
+                const specificSide: Side = findKey(surroundingTiles, tile) as Side // skin the hands that typed this line )(taki line v tom chisle))
+                const possibleSurroundingFromSpecificSide: Tile[] = possibleSurroungings[specificSide] // OKAY, this result is good
+                // es for loopi mej petqa chylni, spaseq mapov branch sarqem. bayc skzbic petqa funkcian ashxatacnenq /?/
             }
 
             console.log(surroundingTiles);
