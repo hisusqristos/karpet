@@ -1,4 +1,4 @@
 const pipe = (value: any, ...fns: Function[]) =>
-    fns.reduce((acc, fn) => fn(acc), value);
+  fns.reduce((acc, fn) => fn(acc), value);
 
-export { pipe }
+export { pipe };
