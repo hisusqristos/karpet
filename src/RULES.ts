@@ -1,8 +1,8 @@
-const allTiles: string[] = ["topLeftCorner", "topRighttCorner", "bottomRightCorner", "bottomLeftCorner", "topEdge", "bottomEdge", "leftEdge", "rightEdge", "internal"]
-
 type Tile = "topLeftCorner" | "topRightCorner" | "bottomRightCorner" | "bottomLeftCorner" | "topEdge" | "bottomEdge" | "leftEdge" | "rightEdge" | "internal";
-type Side = "up" | "right" | "bottom" | "left"
 type Rules = Record<string, Record<Side, Tile[]>>
+type Side = "up" | "right" | "bottom" | "left"
+
+const allTiles: Tile[] = ["topLeftCorner", "topRightCorner", "bottomRightCorner", "bottomLeftCorner", "topEdge", "bottomEdge", "leftEdge", "rightEdge", "internal"]
 
 const rules: Rules = {
     topLeftCorner: { up: [], right: ["topEdge", "topRightCorner"], bottom: ["leftEdge", "bottomLeftCorner"], left: [] },
