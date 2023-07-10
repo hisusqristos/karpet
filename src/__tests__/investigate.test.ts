@@ -31,17 +31,17 @@ describe.skip("investigate surrounding cells and return an array of possible til
 
 const investigate = (rules: Rules) => { // sorry for these ugly types, will try to write better looking solutions
     return (y: number, x: number) => {
-        return (grid: Tile[][]): string[] => {
+        return (grid: Tile[][]): Tile[] => {
             const possibleTiles = allTiles
             // risky lines with mutations, to be refactored
             const surroundingTiles: Record<Side, Tile> = { up: grid[y - 1][x], right: grid[y][x + 1], bottom: grid[y + 1][x], left: grid[y][x - 1] };
 
-            for (const tile in surroundingTiles) {
+            const possibleSurroundings: Tile[][] = Object.keys(surroundingTiles).map((tile) => {
                 const possibleSurroungings: Record<Side, Tile[]> = rules[tile];
-                const specificSide: Side = findKey(surroundingTiles, tile) as Side // skin the hands that typed this line )(taki line v tom chisle))
-                const possibleSurroundingFromSpecificSide: Tile[] = possibleSurroungings[specificSide] // OKAY, this result is good
-                // es for loopi mej petqa chylni, spaseq mapov branch sarqem. bayc skzbic petqa funkcian ashxatacnenq /?/
-            }
+                const specificSide: Side = findKey(surroundingTiles, tile) as Side;
+                const possibleSurroundingFromSpecificSide: Tile[] = possibleSurroungings[specificSide];
+                return possibleSurroundingFromSpecificSide;
+            });
 
             console.log(surroundingTiles);
             return possibleTiles
