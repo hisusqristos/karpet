@@ -1,7 +1,7 @@
 import { gridInit } from "../helpers/gridInit";
 import { pipe } from "../helpers/pipe";
 import { collapse } from "../helpers/collapse";
-import { allTiles, rules, Side, Rules, Tile } from "../RULES";
+import { rules, Side, Rules, Tile } from "../RULES";
 import { findKey } from "../helpers/findKey";
 
 describe.skip("investigate surrounding cells and return an array of possible tiles for the current cell", () => {
@@ -28,23 +28,26 @@ describe.skip("investigate surrounding cells and return an array of possible til
 const investigate = (rules: Rules) => {
   return (y: number, x: number) => {
     return (grid: Tile[][]): Tile[] => {
-      const possibleTiles = allTiles;
       const surroundingTiles: Record<Side, Tile> = {
-        up: grid[y - 1][x],
-        right: grid[y][x + 1],
-        bottom: grid[y + 1][x],
-        left: grid[y][x - 1],
+        bottom: grid[y - 1][x],
+        left: grid[y][x + 1],
+        up: grid[y + 1][x],
+        right: grid[y][x - 1],
       };
 
       const possibleTilesForCurrentCell: Tile[][] = Object.keys(
         surroundingTiles
       ).map((tile) => {
-        const possibleSurroungings: Record<Side, Tile[]> = rules[tile];
-        const specificSide: Side = findKey(surroundingTiles, tile) as Side;
+        const specificSide: Side = findKey(surroundingTiles, tile) as Side; // vor komi harevann a
         const possibleSurroundingFromSpecificSide: Tile[] =
-          possibleSurroungings[specificSide];
+          rules[tile][specificSide]; // esi chishta
+
         return possibleSurroundingFromSpecificSide;
       });
+
+      const possibleTiles: Tile[] = [
+        ...new Set(possibleTilesForCurrentCell.flat(1)), // using sets to remove duplicates seems nice :2
+      ].filter((x) => x == undefined);
 
       console.log(surroundingTiles);
       return possibleTiles;
