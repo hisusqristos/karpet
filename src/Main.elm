@@ -27,14 +27,24 @@ type Msg
     = Placid
 
 
+indent : ScreenSize -> Float -> Grid -> Float
+indent { width } tileSize { cols } =
+    (width - tileSize * toFloat cols) / 2
+
+
 view : Model -> Html Msg
 view { screen } =
     let
-        placeInCenter : Html Msg -> ScreenSize -> Html Msg
-        placeInCenter _ _ =
-            Debug.todo "Place the rug in the center of the screen"
+        dimensions =
+            { cols = 30, rows = 8 }
+
+        rug =
+            grid dimensions tiles
+
+        oneFingerSpace =
+            Debug.toString (indent screen 60 dimensions) ++ "px"
     in
-    grid { cols = 4, rows = 3 } tiles
+    div [ style "margin-top" "200px", style "margin-left" oneFingerSpace ] [ rug ]
 
 
 tiles : Dict Location (Html msg)
