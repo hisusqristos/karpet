@@ -1,4 +1,4 @@
-module Example exposing (..)
+module Screen exposing (..)
 
 import Expect
 import Main exposing (Grid, indent)

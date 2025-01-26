@@ -4,6 +4,7 @@ import Browser
 import Dict exposing (Dict)
 import Html exposing (Html, div, img)
 import Html.Attributes exposing (src, style, width)
+import Random exposing (Generator)
 
 
 type alias Model =
@@ -27,6 +28,26 @@ type Msg
     = Placid
 
 
+tileLibrary : Dict String (Html Msg)
+tileLibrary =
+    [ ( "diagonal-down", img [ src "../tiles/diagonal-down.png", width 60 ] [] )
+    , ( "horizontal", img [ src "../tiles/horizontal.png", width 60 ] [] )
+    , ( "ne-yellow", img [ src "../tiles/ne-yelo.png", width 60 ] [] )
+    , ( "nw-yellow", img [ src "../tiles/nw-yelo.png", width 60 ] [] )
+    , ( "se-pink", img [ src "../tiles/se-pink.png", width 60 ] [] )
+    , ( "sw-pink", img [ src "../tiles/sw-pink.png", width 60 ] [] )
+    , ( "vertical", img [ src "../tiles/vertical.png", width 60 ] [] )
+    , ( "diagonal-up", img [ src "../tiles/diagonal-up.png", width 60 ] [] )
+    , ( "ne-pink", img [ src "../tiles/ne-pink.png", width 60 ] [] )
+    , ( "nw-pink", img [ src "../tiles/nw-pink.png", width 60 ] [] )
+    , ( "pink", img [ src "../tiles/pink.png", width 60 ] [] )
+    , ( "se-yellow", img [ src "../tiles/se-yelo.png", width 60 ] [] )
+    , ( "sw-yellow", img [ src "../tiles/sw-yelo.png", width 60 ] [] )
+    , ( "yellow", img [ src "../tiles/yelo.png", width 60 ] [] )
+    ]
+        |> Dict.fromList
+
+
 indent : ScreenSize -> Float -> Grid -> Float
 indent { width } tileSize { cols } =
     (width - tileSize * toFloat cols) / 2
@@ -39,7 +60,7 @@ view { screen } =
             { cols = 30, rows = 8 }
 
         rug =
-            grid dimensions tiles
+            grid dimensions tilesAnlurj
 
         oneFingerSpace =
             Debug.toString (indent screen 60 dimensions) ++ "px"
@@ -47,9 +68,31 @@ view { screen } =
     div [ style "margin-top" "200px", style "margin-left" oneFingerSpace ] [ rug ]
 
 
-tiles : Dict Location (Html msg)
-tiles =
+tilesAnlurj : Dict Location (Html msg)
+tilesAnlurj =
     Dict.fromList [ ( ( 2, 2 ), img [ src "../tiles/horizontal.png", width 60 ] [] ), ( ( 1, 2 ), img [ src "../tiles/horizontal.png", width 60 ] [] ) ]
+
+
+tiles : Grid -> Dict Location (Generator (Html Msg))
+tiles rug =
+    let
+        randomTiles : List (Generator (Html msg))
+        randomTiles =
+            Debug.todo "all locations in grid"
+
+        coordinates =
+            locations rug
+    in
+    List.map2 Tuple.pair coordinates randomTiles |> Dict.fromList
+
+
+randomTile : Generator (Html Msg)
+randomTile =
+    let
+        rugParts =
+            tileLibrary |> Dict.values
+    in
+    Random.uniform (img [ src "../tiles/yelo.png", width 60 ] []) rugParts
 
 
 main : Program Flags Model Msg
@@ -102,3 +145,18 @@ cell content =
         , style "height" "60px"
         ]
         [ content ]
+
+
+locations : Grid -> List Location
+locations { cols, rows } =
+    let
+        columns =
+            List.range 1 cols
+
+        eachRow =
+            List.range 1 rows
+    in
+    eachRow
+        |> List.foldl
+            (\currentRow alreadyPaired -> columns |> List.map (Tuple.pair currentRow) |> (++) alreadyPaired)
+            []
