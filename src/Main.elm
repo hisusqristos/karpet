@@ -2,13 +2,14 @@ module Main exposing (..)
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Html, div, img)
+import Html exposing (Html, button, div, img, text)
 import Html.Attributes exposing (src, style, width)
+import Html.Events exposing (onClick)
 import Random exposing (Generator)
 
 
 type alias Model =
-    { screen : ScreenSize }
+    { screen : ScreenSize, radar : Dict Location (Html Msg), dimensions : Grid }
 
 
 type alias Flags =
@@ -21,23 +22,19 @@ type alias ScreenSize =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { screen = flags }, Cmd.none )
-
-
-type Msg
-    = Placid
+    ( { screen = flags, radar = Dict.empty, dimensions = { cols = 16, rows = 20 } }, Cmd.none )
 
 
 tileLibrary : Dict String (Html Msg)
 tileLibrary =
-    [ ( "diagonal-down", img [ src "../tiles/diagonal-down.png", width 60 ] [] )
+    [ ( "diagonal-down", img [ src "../tiles/diogonal-down.png", width 60 ] [] )
     , ( "horizontal", img [ src "../tiles/horizontal.png", width 60 ] [] )
     , ( "ne-yellow", img [ src "../tiles/ne-yelo.png", width 60 ] [] )
     , ( "nw-yellow", img [ src "../tiles/nw-yelo.png", width 60 ] [] )
     , ( "se-pink", img [ src "../tiles/se-pink.png", width 60 ] [] )
     , ( "sw-pink", img [ src "../tiles/sw-pink.png", width 60 ] [] )
     , ( "vertical", img [ src "../tiles/vertical.png", width 60 ] [] )
-    , ( "diagonal-up", img [ src "../tiles/diagonal-up.png", width 60 ] [] )
+    , ( "diagonal-up", img [ src "../tiles/diogonal-up.png", width 60 ] [] )
     , ( "ne-pink", img [ src "../tiles/ne-pink.png", width 60 ] [] )
     , ( "nw-pink", img [ src "../tiles/nw-pink.png", width 60 ] [] )
     , ( "pink", img [ src "../tiles/pink.png", width 60 ] [] )
@@ -54,36 +51,42 @@ indent { width } tileSize { cols } =
 
 
 view : Model -> Html Msg
-view { screen } =
+view { screen, radar, dimensions } =
     let
-        dimensions =
-            { cols = 30, rows = 8 }
-
         rug =
-            grid dimensions tilesAnlurj
+            grid dimensions radar
 
         oneFingerSpace =
             Debug.toString (indent screen 60 dimensions) ++ "px"
     in
-    div [ style "margin-top" "200px", style "margin-left" oneFingerSpace ] [ rug ]
+    div [ style "margin-top" "200px", style "margin-left" oneFingerSpace ] [ rug, button [ onClick MixTiles ] [ text "Regenerate" ] ]
 
 
-tilesAnlurj : Dict Location (Html msg)
-tilesAnlurj =
-    Dict.fromList [ ( ( 2, 2 ), img [ src "../tiles/horizontal.png", width 60 ] [] ), ( ( 1, 2 ), img [ src "../tiles/horizontal.png", width 60 ] [] ) ]
-
-
-tiles : Grid -> Dict Location (Generator (Html Msg))
+tiles : Grid -> Generator (Dict Location (Html Msg))
 tiles rug =
     let
-        randomTiles : List (Generator (Html msg))
-        randomTiles =
-            Debug.todo "all locations in grid"
-
         coordinates =
             locations rug
+
+        tileCount =
+            rug.cols * rug.rows
     in
-    List.map2 Tuple.pair coordinates randomTiles |> Dict.fromList
+    Random.map2 (List.map2 Tuple.pair) (Random.constant coordinates) (randomTiles tileCount) |> Random.map Dict.fromList
+
+
+randomTiles : Int -> Generator (List (Html Msg))
+randomTiles count =
+    case count of
+        0 ->
+            Random.constant []
+
+        1 ->
+            Dict.values tileLibrary
+                |> Random.uniform (img [ src "../tiles/diogonal-down.png", width 60 ] [])
+                |> Random.andThen (List.singleton >> Random.constant)
+
+        x ->
+            Random.map2 (++) (randomTiles 1) (randomTiles (x - 1))
 
 
 randomTile : Generator (Html Msg)
@@ -101,8 +104,18 @@ main =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update _ model =
-    ( model, Cmd.none )
+update msg model =
+    case msg of
+        MixTiles ->
+            ( model, Random.generate NewRug (tiles model.dimensions) )
+
+        NewRug newRug ->
+            ( { model | radar = newRug }, Cmd.none )
+
+
+type Msg
+    = NewRug (Dict Location (Html Msg))
+    | MixTiles
 
 
 type alias Grid =
@@ -118,11 +131,11 @@ grid size tileMap =
     let
         cellsForRow : Int -> List ( Int, Int )
         cellsForRow row =
-            List.range 1 size.cols |> List.map (\column -> ( column, row ))
+            List.range 1 size.rows |> List.map (\column -> ( column, row ))
 
         gridByRows : List (List ( Int, Int ))
         gridByRows =
-            List.range 1 size.rows |> List.map cellsForRow
+            List.range 1 size.cols |> List.map cellsForRow
 
         tileOn xy =
             tileMap
