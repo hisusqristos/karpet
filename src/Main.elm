@@ -9,6 +9,19 @@ import Random exposing (Generator)
 import Tiles exposing (randomTiles, tileSize)
 
 
+
+-- MAIN
+
+
+main : Program Flags Model Msg
+main =
+    Browser.element { init = init, view = view, update = update, subscriptions = \_ -> Sub.none }
+
+
+
+-- MODEL
+
+
 type alias Model =
     { screen : ScreenSize, radar : Dict Location (Html Msg), dimensions : Grid }
 
@@ -26,32 +39,16 @@ type alias Location =
     ( Int, Int )
 
 
-view : Model -> Html Msg
-view { screen, radar, dimensions } =
-    let
-        rug =
-            grid dimensions radar
-
-        oneFingerSpace =
-            Debug.toString (indent screen tileSize dimensions) ++ "px"
-    in
-    div [ style "margin-top" "200px", style "margin-left" oneFingerSpace ]
-        [ rug, button [ onClick MixTiles ] [ text "Regenerate" ] ]
+type alias ScreenSize =
+    { width : Float, height : Float }
 
 
-type Msg
-    = NewRug (Dict Location (Html Msg))
-    | MixTiles
+type alias Flags =
+    ScreenSize
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        MixTiles ->
-            ( model, Random.generate NewRug (randomRadar model.dimensions) )
 
-        NewRug newRug ->
-            ( { model | radar = newRug }, Cmd.none )
+-- RUG RELATED
 
 
 randomRadar : Grid -> Generator (Dict Location (Html Msg))
@@ -93,21 +90,6 @@ grid size tileMap =
         (gridByRows |> List.map markupForRow)
 
 
-indent : ScreenSize -> Int -> Grid -> Int
-indent { width } tileSize { cols } =
-    ((width - toFloat (tileSize * cols)) / 2)
-        |> floor
-
-
-cell : Html msg -> Html msg
-cell content =
-    div
-        [ style "width" (String.fromInt tileSize ++ "px")
-        , style "height" (String.fromInt tileSize ++ "px")
-        ]
-        [ content ]
-
-
 locations : Grid -> List Location
 locations { cols, rows } =
     let
@@ -126,14 +108,52 @@ locations { cols, rows } =
         |> List.foldl pairColsRows []
 
 
-type alias ScreenSize =
-    { width : Float, height : Float }
+
+-- UPDATE
 
 
-type alias Flags =
-    ScreenSize
+type Msg
+    = NewRug (Dict Location (Html Msg))
+    | MixTiles
 
 
-main : Program Flags Model Msg
-main =
-    Browser.element { init = init, view = view, update = update, subscriptions = \_ -> Sub.none }
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        MixTiles ->
+            ( model, Random.generate NewRug (randomRadar model.dimensions) )
+
+        NewRug newRug ->
+            ( { model | radar = newRug }, Cmd.none )
+
+
+
+-- VIEW
+
+
+view : Model -> Html Msg
+view { screen, radar, dimensions } =
+    let
+        rug =
+            grid dimensions radar
+
+        oneFingerSpace =
+            Debug.toString (indent screen tileSize dimensions) ++ "px"
+    in
+    div [ style "margin-top" "200px", style "margin-left" oneFingerSpace ]
+        [ rug, button [ onClick MixTiles ] [ text "Regenerate" ] ]
+
+
+indent : ScreenSize -> Int -> Grid -> Int
+indent { width } tileSize { cols } =
+    ((width - toFloat (tileSize * cols)) / 2)
+        |> floor
+
+
+cell : Html msg -> Html msg
+cell content =
+    div
+        [ style "width" (String.fromInt tileSize ++ "px")
+        , style "height" (String.fromInt tileSize ++ "px")
+        ]
+        [ content ]
