@@ -7,7 +7,7 @@ import Html.Attributes exposing (src, style, width)
 import Html.Events exposing (onClick)
 import Random exposing (Generator)
 import Set
-import Tiles exposing (randomTiles, tileLibrary, tileSize)
+import Tiles exposing (tileLibrary, tileSize)
 
 
 
@@ -29,7 +29,7 @@ type alias Model =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { screen = flags, radar = Dict.empty, dimensions = { cols = 4, rows = 4 } }, Cmd.none )
+    ( { screen = flags, radar = Dict.empty, dimensions = { cols = 10, rows = 6 } }, Cmd.none )
 
 
 type alias Grid =
@@ -58,24 +58,16 @@ type alias TileMap =
 
 alternativeRadar : List Location -> Grid -> Generator (List ( Location, Html Msg ))
 alternativeRadar coordinates rug =
-    case coordinates of
-        [] ->
-            Random.constant []
-
-        [ x ] ->
-            x |> symmetricalCells rug |> Tuple.first |> tileUp rug
-
-        x :: xs ->
+    List.foldl
+        (\x acc ->
             let
                 ( reflectionCells, locationsLeft ) =
                     symmetricalCells rug x
             in
-            Random.map2 (++)
-                (tileUp rug reflectionCells)
-                -- Generates a TileMap
-                (alternativeRadar locationsLeft rug)
-
-
+            Random.map2 (++) (tileUp rug reflectionCells) acc
+        )
+        (Random.constant [])
+        coordinates
 
 -- Recursively generate the rest
 

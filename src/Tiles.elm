@@ -1,8 +1,6 @@
 module Tiles exposing (..)
 
 import Dict exposing (Dict)
-import Html exposing (Html, img)
-import Html.Attributes exposing (src, width)
 import Random exposing (Generator)
 
 

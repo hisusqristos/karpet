@@ -1,11 +1,8 @@
 module Symmetry exposing (..)
 
 import Expect
-import Html exposing (Html, img)
-import Html.Attributes exposing (src, style, width)
-import Main exposing (Grid, Location, Msg, assignRotation, scaleSettings, symmetricalCells)
+import Main exposing (Grid, scaleSettings, symmetricalCells)
 import Test exposing (..)
-import Tiles exposing (tileSize)
 
 
 suite : Test
